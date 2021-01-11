@@ -3,11 +3,12 @@ module Codemaker
 
   $player = {
   "code" => [],
+  "hint" => [],
   }
 
   $computer = {
-  "code" => []
-  "previous_guesses" => []
+  "code" => [],
+  "previous_guesses" => [],
   }
 
 
@@ -24,7 +25,8 @@ module Codemaker
     puts "Very well - please designate the secret four digit code..."
 
     player_code = gets.chomp
-    $player["code"].push(player_code).join().split('').map { |value| value.to_i }
+    $player["code"].push(player_code)
+    $player["code"].map { |value| value.to_i }
     sleep(2)
 
     puts "Excellent!  The computer will now attempt to guess your code..."
@@ -40,7 +42,7 @@ module Codemaker
 
     #first guess (random)
     if $computer["previous_guesses"].length() == 0
-      while i < 5 do
+      while i < 4 do
         random_num = rand(6)
         if !$computer["code"].include?(random_num)
           $computer["code"].push(random_num)
@@ -48,15 +50,39 @@ module Codemaker
         end  
       end 
     end  
-  end
 
-  def report_guess()
-    if $computer["code"] != $player["code"]
-    puts "The computer guessed #{$computer["code"].inspect()}"
-    sleep(2)
-    puts "Guessing again..."
+    #other guesses (strategic)
+    if $computer["previous_guesses"].length() > 0
+    end  
+
+    def check_win()
+      if $computer["code"] == $player["code"]
+        puts "The computer cracked the code!"
+        sleep(3)
+        game()
+      end  
+    end   
+    
+    def give_hint()
+    end  
+      
+
+    def report_guess()
+      if $computer["code"] != $player["code"]
+        puts "The computer guessed #{$computer["code"].inspect()}"
+        puts $player["code"].inspect()
+        sleep(2)
+        give_hint()
+        puts "Guessing again..."
+      end
     end
+
+    check_win()
+    report_guess()
+
   end  
+
+
 
   def run_codemaker()
     intro()
