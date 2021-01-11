@@ -32,7 +32,7 @@ module Codebreaker
         if $player["code"] == $computer["code"]
           puts "Congratulations - you cracked the code!"
           sleep(4)
-          system("clear")
+          game()
         end  
       end
 
@@ -94,8 +94,6 @@ module Codebreaker
       puts "5 = white"
       puts ""
 
-      puts $computer["code"]
-     
 
     puts "Please enter four numbers of the colors above to make your guess..."
       

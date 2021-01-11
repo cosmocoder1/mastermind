@@ -7,6 +7,7 @@ include Codemaker
 
 def game()
 
+  system("clear")
 
   player = {
   "player_type" => "",
@@ -36,8 +37,5 @@ end
  
 
 game()
-
-
-
 
 
