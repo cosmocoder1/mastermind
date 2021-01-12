@@ -21,14 +21,14 @@ module Codebreaker
   end
 
   
-  def intro()
+  def intro_cb()
     puts "Excellent!  I'm generating the secret code now..."
     sleep(2)
     $computer["code"] = generate_code()
   end  
 
   # check for winning code
-  def check_win()
+  def check_win_cb()
         if $player["code"] == $computer["code"]
           puts "Congratulations - you cracked the code!"
           sleep(4)
@@ -105,7 +105,7 @@ module Codebreaker
       print $player["code"].map { |value| interpret(value) }
       puts ""
        
-      check_win()
+      check_win_cb()
       analysis()
       game_cb_loop()
 
@@ -116,7 +116,7 @@ module Codebreaker
 
 
   def run_codebreaker()
-    intro()
+    intro_cb()
     game_cb_loop()
   end
   
