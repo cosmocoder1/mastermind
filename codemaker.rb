@@ -13,6 +13,8 @@ module Codemaker
   "correct_place" => 0
   }
 
+  $guess_loop = 0
+
 
   def intro_cm()
     puts ""
@@ -26,8 +28,8 @@ module Codemaker
 
     puts "Very well - please designate the secret four digit code..."
 
-    player_code = [gets.chomp]
-    $player["code"] = player_code.join().split('').map { |value| value.to_i }
+    player_code = gets.chomp.split('')
+    $player["code"] = player_code.map { |value| value.to_i() }
     puts $player["code"].inspect()
     sleep(2)
 
@@ -39,40 +41,37 @@ module Codemaker
 
 
   def game_cm_loop()
-
-    i = 0
-
-    #first guess (random)
-    if $computer["previous_guesses"].length() == 0
-      while i < 4 do
-        random_num = rand(6)
-        if !$computer["code"].include?(random_num)
-          $computer["code"].push(random_num)
-          i += 1
-        end  
-      end 
-    end  
-
-    #other guesses (strategic)
-    if $computer["previous_guesses"].length() > 0
-      #if number of correct colors < 4
-      #change 1st digit of previous guess
-      #if number of correct places increases - keep change and return out
-      #if number of correct places decreases - change back to previous and return out
-      #if number of correct places stays the same...not possible?
     
-      #if number of correct colors = 4, different strategy
-      #switch 1st digit with second digit
-      #if correct places increases - keep change and return out
-      #if correct places decreases - undo change and return out
-      #if correct places remains the same... impossible
+    i = 0 
+    $computer["code"] = []
+
+    #computer guess
+    while i < 4 do
+      random_num = rand(6).to_s
+      if !$computer["code"].include?(random_num) 
+        $computer["code"].push(random_num)
+        i += 1
+      end  
+        $computer["code"] = $computer["code"].map { |value| value.to_i() }
+    end 
       
-      #then repeat process with first and third - first and fourth, then use nested loop to try same process with 2nd digit (w 3rd and 4th digits) and then 3rd (3rd and 4th)
+    puts $computer["code"]
 
+    #add computer guess to previous guesses array
+    if !$computer["previous_guesses"].include?($computer["code"])
+      $computer["previous_guesses"].push($computer["code"])  
     end  
 
+    $guess_loop += 1
 
-    
+    if $guess_loop > 13
+      puts "The computer failed to guess your code!"
+      sleep(3)
+      system("clear")
+      game()
+    end    
+
+
     #check for victory
     def check_win_cm()
       if $computer["code"] == $player["code"]
@@ -82,8 +81,6 @@ module Codemaker
       end  
     end  
     
-    #add computer guess to previous guesses array
-    $computer["previous_guesses"].push($computer["code"])
     
     #player gives hint based on computer's guess
     def give_hint()
