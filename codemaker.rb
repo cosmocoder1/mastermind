@@ -8,7 +8,11 @@ module Codemaker
 
   $computer = {
   "code" => [],
-  "previous_guesses" => []
+  "previous_guess" => [],
+  "correct_colors" => [],
+  "correct_place" => 0,
+  "impossible_numbers" => [],
+  "possible_numbers" => [0, 1, 2, 3, 4, 5]
   }
 
   $guess_loop = 0
@@ -45,9 +49,9 @@ module Codemaker
     i = 0 
 
     $computer["code"] = []
-
+=begin
     #computer guess
-    if $computer["previous_guesses"].length() == 0
+    if $computer["previous_guess"].length() == 0
       while $computer["code"].length < 4 do
         random_num = rand(6)
         unless $computer["code"].include?(random_num) 
@@ -57,7 +61,68 @@ module Codemaker
           $computer["code"] = $computer["code"].map { |value| value.to_i() }
       end 
     end  
+=end
 
+    #computer guess stratagem
+    #first guess
+    if $computer["previous_guess"].length() == 0
+      $computer["code"] = [1, 1, 2, 2]
+    end  
+    #guesses thereafter
+    if $computer["previous_guess"].length() >= 1
+      puts "test block"
+
+      #0 correct colors
+      if $computer["correct_colors"].length() == 0
+        $computer["impossible_numbers"].push(1, 2)
+        $computer["possible_numbers"].push(3, 4, 5, 0)
+        $computer["code"] = [3, 4, 5, 0]
+      end
+
+      #1 correct color - 1st attempt
+      if $computer["correct_colors"].length() == 1 && $computer["previous_guess"].length() == 1
+        $computer["code"] = [1, 1, 3, 3]
+      end  
+
+      #1 correct color - 2nd attempt
+      if $computer["correct_colors"].length() == 1 && $computer["previous_guess"].length() == 2
+        $computer["impossible_numbers"].push(2, 3)
+        $computer["possible_numbers"].push(1, 4, 5, 0)
+        $computer["code"] = [1, 4, 5, 0]
+      end
+      
+      if $computer["correct_colors"].length() == 0 && $computer["previous_guess"].length() == 2
+        $computer["impossible_numbers"].push(1, 3)
+        $computer["possible_numbers"].push(2, 4, 5, 0)
+        $computer["code"] = [2, 4, 5, 0]
+      end
+      
+      #2 correct colors - 1st attempt
+      if $computer["correct_colors"].length() == 2 && $computer["previous_guess"].length == 1
+        $computer["possible_numbers"].push(1, 2)
+        $computer["code"] = [1, 2, 3, 4]
+      end
+      
+      #3 correct colors 
+      if $computer["correct_colors"].length() == 3
+        $computer["code"].push(1, 2)
+          unless $computer["code"].length() > 3
+            remaining_numbers = [3, 4, 5, 0]
+            $computer["code"].push(remaining_numbers.sample())
+          end  
+      end
+
+      if $computer["previous_guess"].length() == 3
+        while $computer["code"].length < 4
+          random_pick = $computer["possible_numbers"].sample()
+          $computer["code"].push(random_pick)
+        end
+      end  
+
+    end
+
+      #update previous_guess
+      $computer["previous_guess"].push($computer["code"].join().to_s())
 
     #12 turn game counter
     $guess_loop += 1
@@ -110,7 +175,9 @@ module Codemaker
 
       #count matching colors
       $computer["code"].map { |value| if $player["code"].include?(value)
-      correct_colors.push(value) 
+        if !correct_colors.include?(value)
+          correct_colors.push(value) 
+        end
       end }
 
       #update object
