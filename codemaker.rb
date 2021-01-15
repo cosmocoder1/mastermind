@@ -70,7 +70,6 @@ module Codemaker
     end  
     #guesses thereafter
     if $computer["previous_guess"].length() >= 1
-      puts "test block"
 
       #0 correct colors
       if $computer["correct_colors"].length() == 0
@@ -98,26 +97,56 @@ module Codemaker
       end
       
       #2 correct colors - 1st attempt
-      if $computer["correct_colors"].length() == 2 && $computer["previous_guess"].length == 1
+      if $computer["correct_colors"].length() == 2 && $computer["previous_guess"].length() == 1
         $computer["possible_numbers"].push(1, 2)
         $computer["code"] = [1, 2, 3, 4]
       end
+
+      #2 correct colors - 2nd attempt
+      if $computer["correct_colors"].length() == 2 
+        $computer["possible_numbers"].push(1, 3, 4, 5, 0)
+        $computer["impossible_numbers"].push(2)
+        random_possible_number = $computer["possible_numbers"].sample()
+        while $computer["code"] < 4
+          if !$computer["code"].include?(random_possible_number)
+          $computer["code"].push(random_possible_number)
+          end
+        end  
+      end  
+
+      
       
       #3 correct colors 
-      if $computer["correct_colors"].length() == 3
+      if $computer["correct_colors"].length() == 3 && $computer["previous_guess"].length() == 2
         $computer["code"].push(1, 2)
-          unless $computer["code"].length() > 3
+          while $computer["code"].length() < 4
             remaining_numbers = [3, 4, 5, 0]
-            $computer["code"].push(remaining_numbers.sample())
+            sample = remaining_numbers.sample()
+            if !$computer["code"].include?(sample)
+              $computer["code"].push(sample)
+            end
           end  
       end
+      #4 correct colors
+      if $computer["correct_colors"].length() == 4
+        while $computer["code"].length < 4
+          random_color = $computer["correct_colors"].sample()
+          if !$computer["code"].include?(random_color)
+            $computer["code"].push(random_color)
+          end
+        end
+      end      
 
-      if $computer["previous_guess"].length() == 3
+      if $computer["previous_guess"].length() >= 3 
         while $computer["code"].length < 4
           random_pick = $computer["possible_numbers"].sample()
-          $computer["code"].push(random_pick)
+            if !$computer["code"].include?(random_pick)
+              $computer["code"].push(random_pick)
+            end
         end
       end  
+
+      
 
     end
 
