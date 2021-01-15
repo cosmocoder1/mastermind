@@ -4,7 +4,6 @@ require_relative 'codemaker'
 include Codebreaker
 include Codemaker
 
-
 def game()
 
   system("clear")
@@ -21,9 +20,12 @@ def game()
   puts "Are you the codemaker..."
   sleep(1)
   puts "...or the codebreaker?"
-  player_type = gets.chomp
-  player["player_type"] = player_type
-
+  $player_type = gets.chomp
+  if $player_type != "codemaker" || "codebreaker"
+    puts "error - please enter either codemaker or codebreaker"
+    $player_type = gets.chomp
+  end  
+  player["player_type"] = $player_type
 
   if player["player_type"] == "codemaker"
       Codemaker.run_codemaker()
@@ -31,10 +33,7 @@ def game()
       Codebreaker.run_codebreaker()
   end
 
-
 end  
-
- 
 
 game()
 

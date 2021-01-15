@@ -20,7 +20,6 @@ module Codebreaker
     return code
   end
 
-  
   def intro_cb()
     puts "Excellent!  I'm generating the secret code now..."
     sleep(2)
@@ -82,7 +81,6 @@ module Codebreaker
 
   end
 
-
   def game_cb_loop()
 
       puts ""
@@ -94,8 +92,7 @@ module Codebreaker
       puts "5 = white"
       puts ""
 
-
-    puts "Please enter four numbers of the colors above to make your guess..."
+    puts "Please enter four numbers (with no duplicates) of the colors above to make your guess..."
       
       $player["code"] = gets.chomp.split('').map { |value| value.to_i }
 
@@ -109,11 +106,7 @@ module Codebreaker
       analysis()
       game_cb_loop()
 
-
-
-
     end 
-
 
   def run_codebreaker()
     intro_cb()
